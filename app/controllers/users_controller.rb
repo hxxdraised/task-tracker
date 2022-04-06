@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action -> { authorize User }, only: %i[ show ]
   skip_after_action :verify_authorized, only: [:new, :create]
 
   def show
