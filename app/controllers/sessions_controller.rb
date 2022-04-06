@@ -3,11 +3,9 @@ class SessionsController < ApplicationController
 
   def new
     @user = User.new
-    authorize @user
   end
 
   def create
-    authorize User, :create?
     authenticated_user = User.find_by(
       email: user_params[:email]
     )&.authenticate(user_params[:password])
@@ -20,6 +18,12 @@ class SessionsController < ApplicationController
       @user.errors.add :base, "Wrong email or password"
       render :new
     end
+  end
+
+  def destroy
+    session.delete(:current_user_id)
+
+    redirect_to projects_path, notice: "You've successfully logged out!"
   end
 
   private
